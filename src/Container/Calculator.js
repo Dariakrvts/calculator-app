@@ -1,32 +1,76 @@
 import React, { useState } from 'react';
 import { TextField, Grid } from '@mui/material';
-import { Button } from '../baseComponents/Button';
+import { Button } from '@mui/material';
 import { Backspace } from '@mui/icons-material';
+import HistoryIcon from '@mui/icons-material/History';
 import './Calculator.css';
 
 const Calculator = () => {
   const [input, setInput] = useState('');
   const [result, setResult] = useState('');
+  const [isEqualPressed, setIsEqualPressed] = useState(false);
 
-  const handleInput = (e) => {
-    setInput(input + e.target.value);
+  const handleButtonClick = (value) => {
+    setInput(input + value);
   };
-
+  const removeLastCharacter = () => {
+    setInput(input.slice(0, -1));
+  };
   const calculateResult = () => {
     try {
-      setResult(eval(input).toString());
+      const operators = ['+', '-', '*', '/'];
+      let currentNumber = '';
+      let total = 0;
+      let operator = '+';
+
+      for (let i = 0; i < input.length; i++) {
+        const char = input[i];
+
+        if (operators.includes(char)) {
+          total = calculateTotal(total, parseFloat(currentNumber), operator);
+          currentNumber = '';
+          operator = char;
+        } else {
+          currentNumber += char;
+        }
+      }
+
+      total = calculateTotal(total, parseFloat(currentNumber), operator);
+      setResult(total);
     } catch (error) {
       setResult('Error');
     }
   };
-
-  const clearInput = () => {
-    setInput('');
-    setResult('');
+  const calculatePercentage = () => {
+    if (!isNaN(result)) {
+      setResult(result / 100);
+    }
+  };
+  const calculateTotal = (total, number, operator) => {
+    switch (operator) {
+      case '+':
+        return total + number;
+      case '-':
+        return total - number;
+      case '*':
+        return total * number;
+      case '/':
+        return total / number;
+        case '%':
+          return total % number;
+      default:
+        return total;
+    }
   };
 
-  const removeLastCharacter = () => {
-    setInput(input.slice(0, -1));
+  const handleEqualsClick = () => {
+    calculateResult();
+  };
+
+  const handleClearClick = () => {
+    setInput('');
+    setResult('');
+    setIsEqualPressed(false);
   };
 
   return (
@@ -37,102 +81,77 @@ const Calculator = () => {
           <TextField type="text" value={input} readOnly />
         </div>
       </div>
-      <div className="buttons">
-        <Grid container spacing={1}>
-          <Grid item xs={3}>
-            <Button onClick={clearInput}>
-              C
-            </Button>
-          </Grid>
-          <Grid item xs={3}>
-            <Button onClick={handleInput} value={'/'}>
-              ÷
-            </Button>
-          </Grid>
-          <Grid item xs={3}>
-            <Button onClick={handleInput} value={'*'}>
-              *
-            </Button>
-          </Grid>
-          <Grid item xs={3}>
-            <Button variant="contained" onClick={handleInput} value={'-'}>
-              -
-            </Button>
-          </Grid>
-          <Grid item xs={3}>
-            <Button variant="contained" onClick={handleInput} value={'9'}>
-              9
-            </Button>
-          </Grid>
-          <Grid item xs={3}>
-            <Button onClick={handleInput} value={'8'}>
-              8
-            </Button>
-          </Grid>
-          <Grid item xs={3}>
-            <Button variant="contained" onClick={handleInput} value={'7'}>
-              7
-            </Button>
-          </Grid>
-          <Grid item xs={3}>
-            <Button variant="contained" onClick={handleInput} value={'+'}>
-              +
-            </Button>
-          </Grid>
-          <Grid item xs={3}>
-            <Button variant="contained" onClick={handleInput} value={'6'}>
-              6
-            </Button>
-          </Grid>
-          <Grid item xs={3}>
-            <Button variant="contained" onClick={handleInput} value={'5'}>
-              5
-            </Button>
-          </Grid>
-          <Grid item xs={3}>
-            <Button variant="contained" onClick={handleInput} value={'4'}>
-              4
-            </Button>
-          </Grid>
-
-          <Grid item xs={3}>
-            <Button variant="contained" onClick={handleInput} value={'3'}>
-              3
-            </Button>
-          </Grid>
-          <Grid item xs={3}>
-            <Button variant="contained" onClick={handleInput} value={'2'}>
-              2
-            </Button>
-          </Grid>
-          <Grid item xs={3}>
-            <Button variant="contained" onClick={handleInput} value={'1'}>
-              1
-            </Button>
-          </Grid>
-
-          <Grid item xs={3}>
-            <Button variant="contained" onClick={handleInput} value={'.'}>
-              .
-            </Button>
-          </Grid>
-          <Grid item xs={3}>
-            <Button variant="contained" onClick={handleInput} value={'0'}>
-              0
-            </Button>
-          </Grid>
-          <Grid item xs={3}>
-            <Button variant="contained" onClick={removeLastCharacter}>
-              <Backspace />
-            </Button>
-          </Grid>
-          <Grid item xs={3}>
-            <Button variant="contained" onClick={calculateResult}>
-              =
-            </Button>
-          </Grid>
+      <Grid container spacing={1}>
+        <Grid item xs={3}>
+          <Button onClick={() => handleClearClick()}>C</Button>
         </Grid>
-      </div>
+        <Grid item xs={3}>
+          <Button>
+            <HistoryIcon />
+          </Button>
+        </Grid>
+        <Grid item xs={3}>
+          <Button onClick={() => calculatePercentage()}>%</Button>
+        </Grid>
+        <Grid item xs={3}>
+          <Button onClick={() => handleButtonClick('/')}>/</Button>
+        </Grid>
+        <Grid item xs={3}>
+          <Button onClick={() => handleButtonClick('1')}>1</Button>
+        </Grid>
+        <Grid item xs={3}>
+          <Button onClick={() => handleButtonClick('2')}>2</Button>
+        </Grid>
+        <Grid item xs={3}>
+          <Button onClick={() => handleButtonClick('3')}>3</Button>
+        </Grid>
+        <Grid item xs={3}>
+          <Button onClick={() => handleButtonClick('*')}>*</Button>
+        </Grid>
+        <Grid item xs={3}>
+          {' '}
+          <Button onClick={() => handleButtonClick('4')}>4</Button>
+        </Grid>
+        <Grid item xs={3}>
+          <Button onClick={() => handleButtonClick('5')}>5</Button>
+        </Grid>
+        <Grid item xs={3}>
+          {' '}
+          <Button onClick={() => handleButtonClick('6')}>6</Button>
+        </Grid>
+        <Grid item xs={3}>
+          <Button onClick={() => handleButtonClick('+')}>+</Button>
+        </Grid>
+        <Grid item xs={3}>
+          <Button onClick={() => handleButtonClick('7')}>7</Button>
+        </Grid>
+        <Grid item xs={3}>
+          <Button onClick={() => handleButtonClick('8')}>8</Button>
+        </Grid>
+        <Grid item xs={3}>
+          <Button onClick={() => handleButtonClick('9')}>9</Button>
+        </Grid>
+        <Grid item xs={3}>
+          {' '}
+          <Button onClick={() => handleButtonClick('-')}>-</Button>
+        </Grid>
+        <Grid item xs={3}>
+          <Button>.</Button>
+        </Grid>
+        <Grid item xs={3}>
+          {' '}
+          <Button onClick={() => handleButtonClick('0')}>0</Button>
+        </Grid>
+        <Grid item xs={3}>
+          <Button onClick={() => handleEqualsClick()}>=</Button>
+        </Grid>
+        <Grid item xs={3}>
+          <Button onClick={removeLastCharacter}>
+            {' '}
+            <Backspace />
+          </Button>
+        </Grid>
+      </Grid>
     </div>
   );
 };

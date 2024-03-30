@@ -4,62 +4,25 @@ import { Button } from '@mui/material';
 import { Backspace } from '@mui/icons-material';
 import HistoryIcon from '@mui/icons-material/History';
 import './Calculator.css';
+import * as math from 'mathjs';
 
 const Calculator = () => {
   const [input, setInput] = useState('');
   const [result, setResult] = useState('');
-  const [isEqualPressed, setIsEqualPressed] = useState(false);
 
   const handleButtonClick = (value) => {
     setInput(input + value);
   };
+
   const removeLastCharacter = () => {
     setInput(input.slice(0, -1));
   };
+
   const calculateResult = () => {
     try {
-      const operators = ['+', '-', '*', '/'];
-      let currentNumber = '';
-      let total = 0;
-      let operator = '+';
-
-      for (let i = 0; i < input.length; i++) {
-        const char = input[i];
-
-        if (operators.includes(char)) {
-          total = calculateTotal(total, parseFloat(currentNumber), operator);
-          currentNumber = '';
-          operator = char;
-        } else {
-          currentNumber += char;
-        }
-      }
-
-      total = calculateTotal(total, parseFloat(currentNumber), operator);
-      setResult(total);
+      setResult(math.evaluate(input));
     } catch (error) {
       setResult('Error');
-    }
-  };
-  const calculatePercentage = () => {
-    if (!isNaN(result)) {
-      setResult(result / 100);
-    }
-  };
-  const calculateTotal = (total, number, operator) => {
-    switch (operator) {
-      case '+':
-        return total + number;
-      case '-':
-        return total - number;
-      case '*':
-        return total * number;
-      case '/':
-        return total / number;
-        case '%':
-          return total % number;
-      default:
-        return total;
     }
   };
 
@@ -70,7 +33,6 @@ const Calculator = () => {
   const handleClearClick = () => {
     setInput('');
     setResult('');
-    setIsEqualPressed(false);
   };
 
   return (
@@ -81,6 +43,7 @@ const Calculator = () => {
           <TextField type="text" value={input} readOnly />
         </div>
       </div>
+      <br />
       <Grid container spacing={1}>
         <Grid item xs={3}>
           <Button onClick={() => handleClearClick()}>C</Button>
@@ -91,7 +54,7 @@ const Calculator = () => {
           </Button>
         </Grid>
         <Grid item xs={3}>
-          <Button onClick={() => calculatePercentage('%')}>%</Button>
+          <Button onClick={() => handleButtonClick('%')}>%</Button>
         </Grid>
         <Grid item xs={3}>
           <Button onClick={() => handleButtonClick('/')}>/</Button>

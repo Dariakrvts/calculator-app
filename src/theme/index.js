@@ -5,9 +5,9 @@ const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          backgroundColor: '#2E2F38',
+          // backgroundColor: '#D2D3DA',
           fontSize: '1.6rem',
-          color: 'white',
+          color: 'black',
           display: 'flex',
           width: '100%',
           height: '100%',
@@ -18,20 +18,26 @@ const theme = createTheme({
         },
       },
     },
-        MuiTextField: {
-          styleOverrides: {
-            root: {
-              backgroundColor: '#4E505F',
-              color: 'white',
-              display: 'flex',
-              minWidth: '90px',
-              borderRadius: '5px',
-              '&:hover': {
-                backgroundColor: '#fff',
-              },
-            },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#4E505F',
+          color: 'white',
+          display: 'flex',
+          minWidth: '90px',
+          borderRadius: '5px',
+          '&:hover': {
+            backgroundColor: '#D2D3DA',
           },
-        }, 
+        },
+      },
+    },
+  },
+});
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
   },
 });
 

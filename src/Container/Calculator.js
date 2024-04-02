@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Typography, Grid } from '@mui/material';
 import { Button } from '@mui/material';
 import { Backspace } from '@mui/icons-material';
 import HistoryIcon from '@mui/icons-material/History';
 import './Calculator.css';
+
 // import * as math from 'mathjs';
 
 const Calculator = () => {
@@ -11,6 +12,36 @@ const Calculator = () => {
   const [secondNumber, setSecondNumber] = React.useState('');
   const [operator, setOperator] = React.useState('');
   const [result, setResult] = React.useState('');
+
+  // const getDesignTokens = (mode: PaletteMode) => ({
+  //   palette: {
+  //     mode,
+  //     ...(mode === 'light'
+  //       ? {
+  //           // palette values for light mode
+  //           primary: amber,
+  //           divider: amber[200],
+  //           text: {
+  //             primary: grey[900],
+  //             secondary: grey[800],
+  //           },
+  //         }
+  //       : {
+  //           // palette values for dark mode
+  //           primary: deepOrange,
+  //           divider: deepOrange[700],
+  //           background: {
+  //             default: deepOrange[900],
+  //             paper: deepOrange[900],
+  //           },
+  //           text: {
+  //             primary: '#fff',
+  //             secondary: grey[500],
+  //           },
+  //         }),
+  //   },
+  // });
+
   
   const handleNumberClick = (number) => {
     if (result !== '') {
@@ -18,20 +49,36 @@ const Calculator = () => {
       setSecondNumber('');
       setResult('');
     }
-    if (operator === '') {
-      setFirstNumber(firstNumber + number);
+    if (number === '.' && (operator === '' || secondNumber === '')) {
+      if ((operator === '' && !firstNumber.includes('.')) || (operator !== '' && !secondNumber.includes('.'))) {
+        if (operator === '') {
+          setFirstNumber(firstNumber + number);
+        } else {
+          setSecondNumber(secondNumber + number);
+        }
+      }
     } else {
-      setSecondNumber(secondNumber + number);
+      if (operator === '') {
+        setFirstNumber(firstNumber + number);
+      } else {
+        setSecondNumber(secondNumber + number);
+      }
     }
   };
-
   const handleOperatorClick = (operator) => {
     if (result !== '') {
       setFirstNumber(result);
       setSecondNumber('');
       setResult('');
     }
-    setOperator(operator);
+    if (operator === '%') {
+      setResult((parseFloat(firstNumber) * 0.01).toString());
+      setFirstNumber('');
+      setSecondNumber('');
+      setOperator('');
+    } else {
+      setOperator(operator);
+    }
   };
 
   const handleEqualClick = () => {
@@ -39,7 +86,7 @@ const Calculator = () => {
       setResult(firstNumber);
       return;
     }
-  
+
     const firstNum = parseFloat(firstNumber);
     const secondNum = parseFloat(secondNumber);
     let resultNum;
@@ -57,6 +104,12 @@ const Calculator = () => {
       case '/':
         resultNum = firstNum / secondNum;
         break;
+        // case '.':
+        // resultNum = firstNum . secondNum;
+        // break;
+      case '%':
+        resultNum = firstNum * (secondNum / 100);
+        break;
       default:
         break;
     }
@@ -71,8 +124,18 @@ const Calculator = () => {
     setResult('');
   };
   
+  const removeLastCharacter = () => {
+    if (operator === '') {
+      setFirstNumber(firstNumber.slice(0, -1));
+    } else if (secondNumber !== '') {
+      setSecondNumber(secondNumber.slice(0, -1));
+    } else {
+      setOperator(operator.slice(0, -1));
+    }
+  };
+
   return (
-    <div className='calculator'>
+    <div className="calculator">
       <Grid item xs={12}>
         <button>ffff</button>
         <Typography variant="h4" component="div">
@@ -82,7 +145,6 @@ const Calculator = () => {
           {result}
         </Typography>
       </Grid>
-      <br />
       <Grid container spacing={1}>
         <Grid item xs={3}>
           <Button onClick={() => handleClearClick()}>C</Button>
@@ -96,7 +158,7 @@ const Calculator = () => {
           <Button onClick={() => handleOperatorClick('%')}>%</Button>
         </Grid>
         <Grid item xs={3}>
-          <Button onClick={() => handleOperatorClick('/')}>/</Button>
+        <Button onClick={() => handleOperatorClick('/')} variant='contained' color='error'>/</Button>
         </Grid>
         <Grid item xs={3}>
           <Button onClick={() => handleNumberClick('1')}>1</Button>
@@ -145,15 +207,12 @@ const Calculator = () => {
           <Button onClick={() => handleNumberClick('0')}>0</Button>
         </Grid>
         <Grid item xs={3}>
-          <Button onClick={() => handleEqualClick()}>=</Button>
-        </Grid>
-        <Grid item xs={3}>
-          <Button
-          // onClick={removeLastCharacter}
-          >
-            {' '}
+          <Button onClick={removeLastCharacter}>
             <Backspace />
           </Button>
+        </Grid>
+        <Grid item xs={3}>
+          <Button onClick={() => handleEqualClick()}>=</Button>
         </Grid>
       </Grid>
     </div>

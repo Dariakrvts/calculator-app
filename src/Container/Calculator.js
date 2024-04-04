@@ -1,13 +1,15 @@
 import React from 'react';
 import { Typography, Grid } from '@mui/material';
 import { Button } from '@mui/material';
+import { Switch } from '@mui/material';
 import { Backspace } from '@mui/icons-material';
+import { useTheme } from '@mui/material/styles';
 import HistoryIcon from '@mui/icons-material/History';
 import './Calculator.css';
-
 // import * as math from 'mathjs';
 
 const Calculator = () => {
+  const theme = useTheme();
   const [firstNumber, setFirstNumber] = React.useState('');
   const [secondNumber, setSecondNumber] = React.useState('');
   const [operator, setOperator] = React.useState('');
@@ -41,8 +43,9 @@ const Calculator = () => {
   //         }),
   //   },
   // });
-
   
+  const colorMode = theme.palette.mode;
+
   const handleNumberClick = (number) => {
     if (result !== '') {
       setFirstNumber(result);
@@ -104,9 +107,6 @@ const Calculator = () => {
       case '/':
         resultNum = firstNum / secondNum;
         break;
-        // case '.':
-        // resultNum = firstNum . secondNum;
-        // break;
       case '%':
         resultNum = firstNum * (secondNum / 100);
         break;
@@ -123,7 +123,7 @@ const Calculator = () => {
     setOperator('');
     setResult('');
   };
-  
+
   const removeLastCharacter = () => {
     if (operator === '') {
       setFirstNumber(firstNumber.slice(0, -1));
@@ -137,7 +137,7 @@ const Calculator = () => {
   return (
     <div className="calculator">
       <Grid item xs={12}>
-        <button>ffff</button>
+        <Switch />
         <Typography variant="h4" component="div">
           {firstNumber} {operator} {secondNumber}
         </Typography>
@@ -147,72 +147,108 @@ const Calculator = () => {
       </Grid>
       <Grid container spacing={1}>
         <Grid item xs={3}>
-          <Button onClick={() => handleClearClick()}>C</Button>
+          <Button onClick={() => handleClearClick()} variant="contained" color="ochrehorisontal">
+            C
+          </Button>
         </Grid>
         <Grid item xs={3}>
-          <Button>
+          <Button variant="contained" color="ochrehorisontal">
             <HistoryIcon />
           </Button>
         </Grid>
         <Grid item xs={3}>
-          <Button onClick={() => handleOperatorClick('%')}>%</Button>
+          <Button onClick={() => handleOperatorClick('%')} variant="contained" color="ochrehorisontal">
+            %
+          </Button>
         </Grid>
         <Grid item xs={3}>
-        <Button onClick={() => handleOperatorClick('/')} variant='contained' color='error'>/</Button>
+          <Button onClick={() => handleOperatorClick('/')} variant="contained" color={colorMode.light}>
+            /
+          </Button>
         </Grid>
         <Grid item xs={3}>
-          <Button onClick={() => handleNumberClick('1')}>1</Button>
+          <Button onClick={() => handleNumberClick('1')} variant="contained" color="ochre">
+            1
+          </Button>
         </Grid>
         <Grid item xs={3}>
-          <Button onClick={() => handleNumberClick('2')}>2</Button>
+          <Button onClick={() => handleNumberClick('2')} variant="contained" color="ochre">
+            2
+          </Button>
         </Grid>
         <Grid item xs={3}>
-          <Button onClick={() => handleNumberClick('3')}>3</Button>
+          <Button onClick={() => handleNumberClick('3')} variant="contained" color="ochre">
+            3
+          </Button>
         </Grid>
         <Grid item xs={3}>
-          <Button onClick={() => handleOperatorClick('*')}>*</Button>
-        </Grid>
-        <Grid item xs={3}>
-          {' '}
-          <Button onClick={() => handleNumberClick('4')}>4</Button>
-        </Grid>
-        <Grid item xs={3}>
-          <Button onClick={() => handleNumberClick('5')}>5</Button>
-        </Grid>
-        <Grid item xs={3}>
-          {' '}
-          <Button onClick={() => handleNumberClick('6')}>6</Button>
-        </Grid>
-        <Grid item xs={3}>
-          <Button onClick={() => handleOperatorClick('+')}>+</Button>
-        </Grid>
-        <Grid item xs={3}>
-          <Button onClick={() => handleNumberClick('7')}>7</Button>
-        </Grid>
-        <Grid item xs={3}>
-          <Button onClick={() => handleNumberClick('8')}>8</Button>
-        </Grid>
-        <Grid item xs={3}>
-          <Button onClick={() => handleNumberClick('9')}>9</Button>
+          <Button onClick={() => handleOperatorClick('*')} variant="contained" color="ochrevertical">
+            *
+          </Button>
         </Grid>
         <Grid item xs={3}>
           {' '}
-          <Button onClick={() => handleOperatorClick('-')}>-</Button>
+          <Button onClick={() => handleNumberClick('4')} variant="contained" color="ochre">
+            4
+          </Button>
         </Grid>
         <Grid item xs={3}>
-          <Button onClick={() => handleOperatorClick('.')}>.</Button>
+          <Button onClick={() => handleNumberClick('5')} variant="contained" color="ochre">
+            5
+          </Button>
         </Grid>
         <Grid item xs={3}>
           {' '}
-          <Button onClick={() => handleNumberClick('0')}>0</Button>
+          <Button onClick={() => handleNumberClick('6')} variant="contained" color="ochre">
+            6
+          </Button>
         </Grid>
         <Grid item xs={3}>
-          <Button onClick={removeLastCharacter}>
+          <Button onClick={() => handleOperatorClick('+')} variant="contained" color="ochrevertical">
+            +
+          </Button>
+        </Grid>
+        <Grid item xs={3}>
+          <Button onClick={() => handleNumberClick('7')} variant="contained" color="ochre">
+            7
+          </Button>
+        </Grid>
+        <Grid item xs={3}>
+          <Button onClick={() => handleNumberClick('8')} variant="contained" color="ochre">
+            8
+          </Button>
+        </Grid>
+        <Grid item xs={3}>
+          <Button onClick={() => handleNumberClick('9')} variant="contained" color="ochre">
+            9
+          </Button>
+        </Grid>
+        <Grid item xs={3}>
+          {' '}
+          <Button onClick={() => handleOperatorClick('-')} variant="contained" color="ochrevertical">
+            -
+          </Button>
+        </Grid>
+        <Grid item xs={3}>
+          <Button onClick={() => handleOperatorClick('.')} variant="contained" color="ochre">
+            .
+          </Button>
+        </Grid>
+        <Grid item xs={3}>
+          {' '}
+          <Button onClick={() => handleNumberClick('0')} variant="contained" color="ochre">
+            0
+          </Button>
+        </Grid>
+        <Grid item xs={3}>
+          <Button onClick={removeLastCharacter} variant="contained" color="ochre">
             <Backspace />
           </Button>
         </Grid>
         <Grid item xs={3}>
-          <Button onClick={() => handleEqualClick()}>=</Button>
+          <Button onClick={() => handleEqualClick()} variant="contained" color="ochrevertical">
+            =
+          </Button>
         </Grid>
       </Grid>
     </div>

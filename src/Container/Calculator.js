@@ -147,11 +147,11 @@ const Calculator = () => {
       </Grid>
       <Grid container spacing={1}>
         <Grid item xs={3}>
-          <Button onClick={() => handleClearClick()} variant="contained" color="ochrehorisontal">
+          <Button onClick={() => handleClearClick()} variant="contained">
             C
           </Button>
         </Grid>
-        <Grid item xs={3}>
+        {/* <Grid item xs={3}>
           <Button variant="contained" color="ochrehorisontal">
             <HistoryIcon />
           </Button>
@@ -249,7 +249,7 @@ const Calculator = () => {
           <Button onClick={() => handleEqualClick()} variant="contained" color="ochrevertical">
             =
           </Button>
-        </Grid>
+        </Grid> */}
       </Grid>
     </div>
   );

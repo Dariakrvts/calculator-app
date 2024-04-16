@@ -1,50 +1,25 @@
-import React from 'react';
-import { Typography, Grid } from '@mui/material';
+/* eslint-disable no-undef */
+import React, { useState } from 'react';
+import { Typography, Grid, useMediaQuery } from '@mui/material';
 import { Button } from '@mui/material';
 import { Switch } from '@mui/material';
 import { Backspace } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
 import HistoryIcon from '@mui/icons-material/History';
 import './Calculator.css';
+import '../App';
+import { useThemeContext } from '../theme/themeContext';
 // import * as math from 'mathjs';
 
 const Calculator = () => {
-  const theme = useTheme();
+  // const theme = useTheme();
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  // const [mode, setMode] = React.useState(prefersDarkMode);
+  const { mode, toggleTheme } = useThemeContext();
   const [firstNumber, setFirstNumber] = React.useState('');
   const [secondNumber, setSecondNumber] = React.useState('');
   const [operator, setOperator] = React.useState('');
   const [result, setResult] = React.useState('');
-
-  // const getDesignTokens = (mode: PaletteMode) => ({
-  //   palette: {
-  //     mode,
-  //     ...(mode === 'light'
-  //       ? {
-  //           // palette values for light mode
-  //           primary: amber,
-  //           divider: amber[200],
-  //           text: {
-  //             primary: grey[900],
-  //             secondary: grey[800],
-  //           },
-  //         }
-  //       : {
-  //           // palette values for dark mode
-  //           primary: deepOrange,
-  //           divider: deepOrange[700],
-  //           background: {
-  //             default: deepOrange[900],
-  //             paper: deepOrange[900],
-  //           },
-  //           text: {
-  //             primary: '#fff',
-  //             secondary: grey[500],
-  //           },
-  //         }),
-  //   },
-  // });
-  
-  const colorMode = theme.palette.mode;
 
   const handleNumberClick = (number) => {
     if (result !== '') {
@@ -68,6 +43,7 @@ const Calculator = () => {
       }
     }
   };
+
   const handleOperatorClick = (operator) => {
     if (result !== '') {
       setFirstNumber(result);
@@ -134,10 +110,16 @@ const Calculator = () => {
     }
   };
 
+  const handleChange = () => {
+      toggleTheme(); // це автоматично перемикає тему між 'light' та 'dark'
+      const newMode = mode === 'light' ? 'dark' : 'light'; // Отримуємо новий стан теми ПІСЛЯ виклику toggleTheme
+      localStorage.setItem('themeMode', newMode);
+  };
+
   return (
     <div className="calculator">
       <Grid item xs={12}>
-        <Switch />
+        <Switch onChange={handleChange} inputProps={{ 'aria-label': 'controlled' }} />
         <Typography variant="h4" component="div">
           {firstNumber} {operator} {secondNumber}
         </Typography>
@@ -151,27 +133,27 @@ const Calculator = () => {
             C
           </Button>
         </Grid>
-        {/* <Grid item xs={3}>
-          <Button variant="contained" color="ochrehorisontal">
+        <Grid item xs={3}>
+          <Button variant="contained">
             <HistoryIcon />
           </Button>
         </Grid>
         <Grid item xs={3}>
-          <Button onClick={() => handleOperatorClick('%')} variant="contained" color="ochrehorisontal">
+          <Button onClick={() => handleOperatorClick('%')} variant="contained">
             %
           </Button>
         </Grid>
         <Grid item xs={3}>
-          <Button onClick={() => handleOperatorClick('/')} variant="contained" color={colorMode.light}>
+          <Button onClick={() => handleOperatorClick('/')} variant="contained">
             /
           </Button>
         </Grid>
         <Grid item xs={3}>
-          <Button onClick={() => handleNumberClick('1')} variant="contained" color="ochre">
+          <Button onClick={() => handleNumberClick('1')} variant="contained">
             1
           </Button>
         </Grid>
-        <Grid item xs={3}>
+        {/* <Grid item xs={3}>
           <Button onClick={() => handleNumberClick('2')} variant="contained" color="ochre">
             2
           </Button>

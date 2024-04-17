@@ -1,11 +1,7 @@
-import { useMediaQuery } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
-import { useState } from 'react';
 
-const theme  = (mode) => createTheme({
+const theme = createTheme({
   palette: {
-    mode: mode ? "dark" : "light",
-
     ochrevertical: {
       main: '#4B5EFC',
       light: '#FFFFFF',

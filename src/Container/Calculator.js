@@ -8,14 +8,12 @@ import { useTheme } from '@mui/material/styles';
 import HistoryIcon from '@mui/icons-material/History';
 import './Calculator.css';
 import '../App';
-import { useThemeContext } from '../theme/themeContext';
 // import * as math from 'mathjs';
 
 const Calculator = () => {
   // const theme = useTheme();
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  // const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   // const [mode, setMode] = React.useState(prefersDarkMode);
-  const { mode, toggleTheme } = useThemeContext();
   const [firstNumber, setFirstNumber] = React.useState('');
   const [secondNumber, setSecondNumber] = React.useState('');
   const [operator, setOperator] = React.useState('');
@@ -110,16 +108,10 @@ const Calculator = () => {
     }
   };
 
-  const handleChange = () => {
-      toggleTheme(); // це автоматично перемикає тему між 'light' та 'dark'
-      const newMode = mode === 'light' ? 'dark' : 'light'; // Отримуємо новий стан теми ПІСЛЯ виклику toggleTheme
-      localStorage.setItem('themeMode', newMode);
-  };
-
   return (
     <div className="calculator">
       <Grid item xs={12}>
-        <Switch onChange={handleChange} inputProps={{ 'aria-label': 'controlled' }} />
+        <Switch inputProps={{ 'aria-label': 'controlled' }} />
         <Typography variant="h4" component="div">
           {firstNumber} {operator} {secondNumber}
         </Typography>

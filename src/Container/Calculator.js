@@ -1,19 +1,18 @@
-/* eslint-disable no-undef */
-import React, { useState } from 'react';
-import { Typography, Grid, useMediaQuery } from '@mui/material';
-import { Button } from '@mui/material';
+import React from 'react';
+import { Typography, Grid } from '@mui/material';
+import { Box, Button, IconButton } from '@mui/material';
 import { Switch } from '@mui/material';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import LightModeIcon from '@mui/icons-material/LightMode';
+import { useThemeContext } from '../context/themeContext';
 import { Backspace } from '@mui/icons-material';
-import { useTheme } from '@mui/material/styles';
 import HistoryIcon from '@mui/icons-material/History';
 import './Calculator.css';
 import '../App';
 // import * as math from 'mathjs';
 
 const Calculator = () => {
-  // const theme = useTheme();
-  // const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-  // const [mode, setMode] = React.useState(prefersDarkMode);
+  const { mode, toggleTheme } = useThemeContext();
   const [firstNumber, setFirstNumber] = React.useState('');
   const [secondNumber, setSecondNumber] = React.useState('');
   const [operator, setOperator] = React.useState('');
@@ -108,124 +107,143 @@ const Calculator = () => {
     }
   };
 
+  const handleThemeChange = () => {
+    toggleTheme();
+    const newMode = mode === 'light' ? 'dark' : 'light';
+    localStorage.setItem('themeMode', newMode);
+    console.log(newMode, ' MODE');
+  };
+
   return (
-    <div className="calculator">
-      <Grid item xs={12}>
-        <Switch inputProps={{ 'aria-label': 'controlled' }} />
-        <Typography variant="h4" component="div">
-          {firstNumber} {operator} {secondNumber}
-        </Typography>
-        <Typography variant="h2" component="div">
-          {result}
-        </Typography>
+    <Box 
+      className="calculator"
+      sx={{
+        bgcolor: 'background.default', 
+        height: '100vh'
+      }}
+    >
+      <Switch
+        // checked={mode}
+        onChange={handleThemeChange}
+        inputProps={{ 'aria-label': 'controlled' }}
+      />
+      <Grid container spacing={1}>
+        <Grid item xs={12}>
+          <Typography variant="h4" component="div">
+            {firstNumber} {operator} {secondNumber}
+          </Typography>
+          <Typography variant="h2" component="div">
+            {result}
+          </Typography>
+        </Grid>
       </Grid>
       <Grid container spacing={1}>
-        <Grid item xs={3}>
+        <Grid item>
           <Button onClick={() => handleClearClick()} variant="contained">
             C
           </Button>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item>
           <Button variant="contained">
             <HistoryIcon />
           </Button>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item >
           <Button onClick={() => handleOperatorClick('%')} variant="contained">
             %
           </Button>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item >
           <Button onClick={() => handleOperatorClick('/')} variant="contained">
             /
           </Button>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item >
           <Button onClick={() => handleNumberClick('1')} variant="contained">
             1
           </Button>
         </Grid>
-        {/* <Grid item xs={3}>
-          <Button onClick={() => handleNumberClick('2')} variant="contained" color="ochre">
+        <Grid item >
+          <Button onClick={() => handleNumberClick('2')} variant="contained">
             2
           </Button>
         </Grid>
-        <Grid item xs={3}>
-          <Button onClick={() => handleNumberClick('3')} variant="contained" color="ochre">
+        <Grid item >
+          <Button onClick={() => handleNumberClick('3')} variant="contained">
             3
           </Button>
         </Grid>
-        <Grid item xs={3}>
-          <Button onClick={() => handleOperatorClick('*')} variant="contained" color="ochrevertical">
+        <Grid item >
+          <Button onClick={() => handleOperatorClick('*')} variant="contained">
             *
           </Button>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item >
           {' '}
-          <Button onClick={() => handleNumberClick('4')} variant="contained" color="ochre">
+          <Button onClick={() => handleNumberClick('4')} variant="contained">
             4
           </Button>
         </Grid>
-        <Grid item xs={3}>
-          <Button onClick={() => handleNumberClick('5')} variant="contained" color="ochre">
+        <Grid item >
+          <Button onClick={() => handleNumberClick('5')} variant="contained">
             5
           </Button>
         </Grid>
         <Grid item xs={3}>
           {' '}
-          <Button onClick={() => handleNumberClick('6')} variant="contained" color="ochre">
+          <Button onClick={() => handleNumberClick('6')} variant="contained">
             6
           </Button>
         </Grid>
         <Grid item xs={3}>
-          <Button onClick={() => handleOperatorClick('+')} variant="contained" color="ochrevertical">
+          <Button onClick={() => handleOperatorClick('+')} variant="contained">
             +
           </Button>
         </Grid>
         <Grid item xs={3}>
-          <Button onClick={() => handleNumberClick('7')} variant="contained" color="ochre">
+          <Button onClick={() => handleNumberClick('7')} variant="contained">
             7
           </Button>
         </Grid>
         <Grid item xs={3}>
-          <Button onClick={() => handleNumberClick('8')} variant="contained" color="ochre">
+          <Button onClick={() => handleNumberClick('8')} variant="contained">
             8
           </Button>
         </Grid>
         <Grid item xs={3}>
-          <Button onClick={() => handleNumberClick('9')} variant="contained" color="ochre">
+          <Button onClick={() => handleNumberClick('9')} variant="contained">
             9
           </Button>
         </Grid>
         <Grid item xs={3}>
           {' '}
-          <Button onClick={() => handleOperatorClick('-')} variant="contained" color="ochrevertical">
+          <Button onClick={() => handleOperatorClick('-')} variant="contained">
             -
           </Button>
         </Grid>
         <Grid item xs={3}>
-          <Button onClick={() => handleOperatorClick('.')} variant="contained" color="ochre">
+          <Button onClick={() => handleOperatorClick('.')} variant="contained">
             .
           </Button>
         </Grid>
         <Grid item xs={3}>
           {' '}
-          <Button onClick={() => handleNumberClick('0')} variant="contained" color="ochre">
+          <Button onClick={() => handleNumberClick('0')} variant="contained">
             0
           </Button>
         </Grid>
         <Grid item xs={3}>
-          <Button onClick={removeLastCharacter} variant="contained" color="ochre">
+          <Button onClick={removeLastCharacter} variant="contained">
             <Backspace />
           </Button>
         </Grid>
         <Grid item xs={3}>
-          <Button onClick={() => handleEqualClick()} variant="contained" color="ochrevertical">
+          <Button onClick={() => handleEqualClick()} variant="contained">
             =
           </Button>
-        </Grid> */}
+        </Grid>
       </Grid>
-    </div>
+    </Box>
   );
 };
 

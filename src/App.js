@@ -1,13 +1,10 @@
-import './App.css';
-import Container from './Container/Calculator';
-import { ThemeProvider } from '@mui/material/styles';
-import theme from './theme/index';
+// import { ThemeProvider } from '@mui/material/styles';
 import * as React from 'react';
+import Container from './Container/Calculator';
+// import theme from './theme/index';
 
 export default function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <Container />
-    </ThemeProvider>
+    <Container /> 
   );
 }

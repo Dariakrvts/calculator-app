@@ -6,7 +6,7 @@ export const lightThemeColors = {
     contrastText: '#FFFFFF',
   }, // колір кнопок
   secondary: { main: '#000' },
-  graytext:{ main: '#747477' },
+  greytext:{ main: '#747477' },
   grey: {
     main: '#D2D3DA',
     light: '#FFFFFF',

@@ -28,6 +28,7 @@ export const CustomThemeProvider = ({ children }) => {
     localStorage.setItem('themeMode', newMode);
     setMode(newMode);
   };
+  
   const theme = createTheme({
     palette: {
       mode,
@@ -48,7 +49,7 @@ export const CustomThemeProvider = ({ children }) => {
       MuiSwitch: {
         styleOverrides: {
           root: {
-            padding: 8,
+            padding: 7,
             '& .MuiSwitch-track': {
               borderRadius: 16,
               backgroundColor:'#FFFFFF',

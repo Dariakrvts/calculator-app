@@ -10,15 +10,14 @@ import '../App';
 // import { lightThemeColors, darkThemeColors } from '../utils/themeColors';
 // import * as math from 'mathjs';
 
-
 //функціональний компонент вякому йде решта коду калькулятора
 const Calculator = () => {
   const { mode, toggleTheme } = useThemeContext(); //отримання значеь з земконтекст
-  const [firstNumber, setFirstNumber] = React.useState(''); //стан для першого числа
-  const [secondNumber, setSecondNumber] = React.useState(''); //стан для другого числа
-  const [operator, setOperator] = React.useState(''); //стан для операторів
-  const [result, setResult] = React.useState(''); //стан для результату
-  const [switchChecked, setSwitchChecked] = React.useState(localStorage.getItem('themeMode') === 'dark'); //стан для перимикання теми
+  const [firstNumber, setFirstNumber] = useState(''); //стан для першого числа
+  const [secondNumber, setSecondNumber] = useState(''); //стан для другого числа
+  const [operator, setOperator] = useState(''); //стан для операторів
+  const [result, setResult] = useState(''); //стан для результату
+  const [switchChecked, setSwitchChecked] = useState(localStorage.getItem('themeMode') === 'dark'); //стан для перимикання теми
   const [history, setHistory] = useState([]); //стан для історії
 
   //рефакторінг зробити  функцію бля операторів щоб було меньше коду (НЕ терміново)
@@ -27,6 +26,33 @@ const Calculator = () => {
     const storedHistory = JSON.parse(localStorage.getItem('calculatorHistory')) || [];
     setHistory(storedHistory);
   }, []);
+
+  //функція яка урізала код. далі викликаємо лише muthOperator та оголошуємо змінну resultNum
+  const muthOperator = () => {
+    const firstNum = parseFloat(firstNumber); //функція дозволяє змінити рядок в число результат зберігається в firstNum
+    const secondNum = parseFloat(secondNumber);
+    let resultNum;
+    switch (operator) {
+      case '+':
+        resultNum = firstNum + secondNum;
+        break;
+      case '-':
+        resultNum = firstNum - secondNum;
+        break;
+      case '*':
+        resultNum = firstNum * secondNum;
+        break;
+      case '/':
+        resultNum = firstNum / secondNum;
+        break;
+      case '%':
+        resultNum = firstNum * (secondNum / 100);
+        break;
+      default:
+        return 'ERR';
+    }
+    return resultNum;
+  };
 
   // https://stackoverflow.com/questions/76915339/stringing-multiple-numbers-on-a-calcuator
   // const handleNumberClick = (number) => {
@@ -52,108 +78,56 @@ const Calculator = () => {
   //     }
   // };
 
+  //функція яка приймає в себе аргумент (число)
   const handleNumberClick = (number) => {
-    //функція яка приймає в себе аргумент (число)
-    if (result !== '') {
-      setFirstNumber(result);
-      setSecondNumber('');
-      setResult('');
-    }
+    // if (result !== '') {
+    //   setFirstNumber(result);
+    //   setSecondNumber('');
+    //   setResult('');
+    // }
+
     if (operator === '') {
       //перевірка чи є пустим оператор
       setFirstNumber(firstNumber + number); //якщо так то додає число до першого
-      console.log('if');
     } else {
       setSecondNumber(secondNumber + number); //якщо ні то додає число після оператору
-      console.log('else');
     }
   };
 
-  const handleOperatorClick = (operator) => {
+  const handleOperatorClick = (newOperator) => {
     if (result !== '') {
-      //якщо вже є результат то зберігає його при цьому однуляя друге число
+      //якщо вже є результат то зберігає його при цьому обнуляя друге число
       setFirstNumber(result);
       setSecondNumber('');
       setResult('');
     }
 
-    //виникла помилка в розрахунках. коли пишеш 20-9 а після +(або любий інший оператор) виходить 29+. тобто рахує не перший, а другий оператор
+    //має працювати при умові якщо вже щось напсано
     if (result === '' && secondNumber !== '' && firstNumber !== '' && operator !== '') {
-      //має працювати при умові якщо вже щось напсано
-      console.log(5674); //написати до цього іф коментарі к було зроблено вище
+    // const firstNum = parseFloat(firstNumber); //функція дозволяє змінити рядок в число результат зберігається в firstNum
 
-      const firstNum = parseFloat(firstNumber); //функція дозволяє змінити рядок в число результат зберігається в firstNum
-      const secondNum = parseFloat(secondNumber);
-      let resultNum;
-      switch (operator) {
-        case '+':
-          resultNum = firstNum + secondNum;
-          break;
-        case '-':
-          resultNum = firstNum - secondNum;
-          break;
-        case '*':
-          resultNum = firstNum * secondNum;
-          break;
-        case '/':
-          resultNum = firstNum / secondNum;
-          break;
-        case '%':
-          resultNum = firstNum * (secondNum / 100);
-          break;
-        default:
-          return 'ERR';
-      }
+      let resultNum = muthOperator(); // оголошення змінної з функцією яку було створено вище для запобігання збільшення коду
       setFirstNumber(resultNum.toString());
       setSecondNumber('');
       setResult('');
     }
 
-    // if (result === '' && firstNumber !=='' && secondNumber !=='' && operator !=='') {//має працювати при умові якщо вже щось напсано
-    //   console.log(5674); //написати до цього іф коментарі к було зроблено вище
-
-    //   const firstNum = parseFloat(firstNumber); //функція дозволяє змінити рядок в число результат зберігається в firstNum
-    //   const secondNum = parseFloat(secondNumber);
-    //   let resultNum;
-    //   switch (operator) {
-    //     case '+':
-    //       resultNum = firstNum + secondNum;
-    //       break;
-    //     case '-':
-    //       resultNum = firstNum - secondNum;
-    //       break;
-    //     case '*':
-    //       resultNum = firstNum * secondNum;
-    //       break;
-    //     case '/':
-    //       resultNum = firstNum / secondNum;
-    //       break;
-    //     case '%':
-    //       resultNum = firstNum * (secondNum / 100);
-    //       break;
-    //     default:
-    //       return 'ERR';
-    //   }
-    //   setFirstNumber(resultNum.toString())
-    //   setSecondNumber('');
-    //   setResult('');
-    // }
-
-    if (operator === '%') {
+    if (newOperator === '%') {
       // дописати що якщо є лише перше число то тоді використовується 1 відцоток
       if (!secondNumber) {
         setResult((parseFloat(firstNumber) * 0.01).toString());
         setFirstNumber('');
         setSecondNumber('');
         setOperator('');
-      } else {// Якщо було введено обидва числа, то результатом буде відсоток першого числа за другим числом. 20% від 100
+      } else {
+        // Якщо було введено обидва числа, то результатом буде відсоток першого числа за другим числом. 20% від 100
         setResult((parseFloat(firstNumber) * (parseFloat(secondNumber) / 100)).toString());
         setFirstNumber('');
         setSecondNumber('');
         setOperator('');
       }
     } else {
-      setOperator(operator);
+      setOperator(newOperator);
     }
   };
 
@@ -163,49 +137,26 @@ const Calculator = () => {
       return;
     }
 
-    const firstNum = parseFloat(firstNumber); //функція дозволяє змінити рядок в число результат зберігається в firstNum
-    const secondNum = parseFloat(secondNumber);
-    let resultNum; // оголошення змінної яка буде зберігати в собі результат розрахунку. без огоошення буде давати андефайн
-
-    switch (operator) {
-      case '+':
-        resultNum = firstNum + secondNum;
-        break;
-      case '-':
-        resultNum = firstNum - secondNum;
-        break;
-      case '*':
-        resultNum = firstNum * secondNum;
-        break;
-      case '/':
-        resultNum = firstNum / secondNum;
-        break;
-      case '%':
-        resultNum = firstNum * (secondNum / 100);
-        break;
-      default:
-        return 'ERR';
-    }
-
+    let resultNum = muthOperator();
     setResult(resultNum.toString()); //претворення результату в рядок
 
     const operation = `${firstNumber} ${operator} ${secondNumber}`;
-    const newHistory = [{ operation, result: resultNum }, ...history]; //нвий запис в історії який складається з прикладу та результату
+    const newHistory = [{ operation, result: resultNum }, ...history]; //новий запис в історії який складається з прикладу та результату
     const trimmedHistory = newHistory.slice(0, 20); //обмеження кількості записів в історії
     setHistory(trimmedHistory); //обновление состояние истории
     localStorage.setItem('calculatorHistory', JSON.stringify(trimmedHistory));
   };
 
+  //очищення всієї робочої області
   const handleClearClick = () => {
-    //очищення всієї робочої області
     setFirstNumber('');
     setSecondNumber('');
     setOperator('');
     setResult('');
   };
 
+  //вмдалення останнього символа
   const removeLastCharacter = () => {
-    //вмдалення останнього символа
     if (operator === '') {
       setFirstNumber(firstNumber.slice(0, -1));
     } else if (secondNumber !== '') {
@@ -217,8 +168,7 @@ const Calculator = () => {
 
   useEffect(() => {
     const themeMode = localStorage.getItem('themeMode'); //отримання поточної теми з локального сховища
-    if (themeMode) {
-      //якщо тему знайдено то йдемо в тіло іфа
+    if (themeMode) {//якщо тему знайдено то йдемо в тіло іфа
       setSwitchChecked(themeMode === 'dark'); // встаноьвлення відповідного значення перемикача
     }
   }, []);
@@ -231,8 +181,7 @@ const Calculator = () => {
   };
 
   return (
-    <Box
-      //використання стилів саме тут через більші можливості пов'язані з бібліотекою
+    <Box //використання стилів саме тут через більші можливості пов'язані з бібліотекою
       className="calculator"
       sx={{
         bgcolor: 'background.default',

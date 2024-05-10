@@ -4,32 +4,32 @@ import { lightThemeColors, darkThemeColors } from '../utils/themeColors';
 
 const ThemeContext = createContext ()
 
-export const useThemeContext = () => {
-  const context = useContext(ThemeContext);
-  if (context === undefined) {
-    throw new Error('useThemeContext must be used within a ThemeProvider');
+export const useThemeContext = () => { //створення хука для контекста
+  const context = useContext(ThemeContext);// отримання значення контексту
+  if (context === undefined) { // перевірка чи визначений контекст
+    throw new Error('useThemeContext must be used within a ThemeProvider'); //показ помили якщо контект не визначений
   }
-  return context;
+  return context; //повернння значення контексту
 };
 
-export const CustomThemeProvider = ({ children }) => {
+export const CustomThemeProvider = ({ children }) => { //обгортка для контексту
   const getInitialTheme = () => {
-    const savedTheme = localStorage.getItem('themeMode');
-    if (savedTheme === 'light' || savedTheme === 'dark') {
+    const savedTheme = localStorage.getItem('themeMode'); // отримання збереженої теми з локал сторедж
+    if (savedTheme === 'light' || savedTheme === 'dark') { // перевірка яка тема збережена
       return savedTheme;
     }
     return 'light';
   };
 
-  const [mode, setMode] = useState(getInitialTheme());
+  const [mode, setMode] = useState(getInitialTheme()); //стан для збереження теми
 
   const toggleTheme = () => {
-    const newMode = mode === 'light' ? 'dark' : 'light';
-    localStorage.setItem('themeMode', newMode);
-    setMode(newMode);
+    const newMode = mode === 'light' ? 'dark' : 'light'; //визначення нової теми
+    localStorage.setItem('themeMode', newMode); //збереження нової теми
+    setMode(newMode);// оновлення стану
   };
   
-  const theme = createTheme({
+  const theme = createTheme({ //створення теми з використанням бібліотеки муі
     palette: {
       mode,
       ...(mode === 'light' ? lightThemeColors : darkThemeColors),
@@ -88,8 +88,8 @@ export const CustomThemeProvider = ({ children }) => {
   });
 
   return (
-    <ThemeContext.Provider value={{ mode, toggleTheme }}>
-      <ThemeProvider theme={theme}>{children}</ThemeProvider>
+    <ThemeContext.Provider value={{ mode, toggleTheme }}> {/*дає доступ до зем та можливості зміни теми */}
+      <ThemeProvider theme={theme}>{children}</ThemeProvider> {/*оточує всі дочірні компоненти. отрімую зем як властивість. завдяки цьому всі компоненти які підтримуються мають доступ до теми */}
     </ThemeContext.Provider>
   );
 };
